@@ -16,6 +16,7 @@
         "autoprefixer": "^10.4.20",
         "flowbite": "^2.5.2",
         "flowbite-svelte": "^0.47.1",
+        "flowbite-svelte-blocks": "^1.1.4",
         "flowbite-svelte-icons": "^1.6.2",
         "postcss": "^8.4.47",
         "svelte": "^4.2.7",

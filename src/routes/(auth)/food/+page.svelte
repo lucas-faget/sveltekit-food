@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
-    import type { Product } from "../../types";
-    import { searchFood } from "../../api/foodApi";
+    import type { Product } from "$lib/types";
+    import { searchFood } from "$lib/api/food";
 
     const products = writable<Product[]>([]);
 

@@ -1,9 +1,11 @@
 <script>
     import Header from "$lib/components/Header.svelte";
-    import "../app.css";
+    import "../../app.css";
 </script>
 
 <div class="flex flex-col">
     <Header />
-    <slot />
+    <div class="bg-neutral-100 min-h-screen">
+        <slot />
+    </div>
 </div>
