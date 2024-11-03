@@ -46,6 +46,40 @@ export async function login(email: string, password: string) {
 }
 
 /**
+ * Create an account
+ * @param email
+ * @param password
+ */
+export async function register(name: string, email: string, password: string) {
+    const response = await fetch("http://localhost:8000/api/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            name,
+            email,
+            password,
+        }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        return {
+            success: true,
+            message: data.message,
+        };
+    } else {
+        return {
+            success: false,
+            message: data.message,
+        };
+    }
+}
+
+/**
  * Logout
  */
 export async function logout() {

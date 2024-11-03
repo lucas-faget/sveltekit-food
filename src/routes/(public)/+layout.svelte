@@ -3,9 +3,7 @@
     import "../../app.css";
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col min-h-screen bg-neutral-100">
     <Header />
-    <div class="min-h-screen">
-        <slot />
-    </div>
+    <slot />
 </div>

@@ -1,11 +1,10 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { getCsrfToken, login } from "$lib/api/auth";
-    import placeholder from "$lib/images/placeholder.svg";
 
-    import { Button } from "$lib/components/ui/button/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
     import { Label } from "$lib/components/ui/label/index.js";
+    import { Input } from "$lib/components/ui/input/index.js";
+    import { Button } from "$lib/components/ui/button/index.js";
 
     let email = "";
     let password = "";
@@ -16,7 +15,6 @@
             await getCsrfToken();
 
             const data = await login(email, password);
-            console.log(data);
 
             if (data?.success) {
                 goto("/");
@@ -29,9 +27,9 @@
     };
 </script>
 
-<div class="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+<div class="flex-1 w-full lg:grid lg:grid-cols-2">
     <div class="flex items-center justify-center py-12">
-        <div class="mx-auto grid w-[350px] gap-6">
+        <div class="grid w-[350px] gap-6">
             <div class="grid gap-2 text-center">
                 <h1 class="text-3xl font-bold">Login</h1>
             </div>
@@ -57,19 +55,11 @@
                 </div>
                 <Button on:click={() => handleLogin()} type="submit" class="w-full">Login</Button>
             </div>
-            <div class="mt-4 text-center text-sm">
+            <div class="text-center text-sm">
                 <span>Don't have an account?</span>
                 <a href="/register" class="underline"> Sign up </a>
             </div>
         </div>
     </div>
-    <div class="bg-muted hidden lg:block">
-        <img
-            src={placeholder}
-            alt="placeholder"
-            width="1920"
-            height="1080"
-            class="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
-    </div>
+    <div class="bg-neutral-600"></div>
 </div>
