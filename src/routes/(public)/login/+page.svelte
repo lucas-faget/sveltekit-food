@@ -1,13 +1,14 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { Section, Register } from "flowbite-svelte-blocks";
-    import { Button, Checkbox, Label, Input, Alert } from "flowbite-svelte";
-    import { InfoCircleSolid } from "flowbite-svelte-icons";
     import { getCsrfToken, login } from "$lib/api/auth";
+    import placeholder from "$lib/images/placeholder.svg";
+
+    import { Button } from "$lib/components/ui/button/index.js";
+    import { Input } from "$lib/components/ui/input/index.js";
+    import { Label } from "$lib/components/ui/label/index.js";
 
     let email = "";
     let password = "";
-    let rememberMe = false;
     let errorMessage = "";
 
     const handleLogin = async () => {
@@ -28,55 +29,47 @@
     };
 </script>
 
-<div class="flex justify-center items-center mt-16">
-    <Section name="login">
-        <Register href="/">
-            <div class="p-6 space-y-4 md:space-y-6 sm:p-8 min-w-96">
-                <div class="flex flex-col space-y-6">
-                    <h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">
-                        Se connecter
-                    </h3>
-                    {#if errorMessage}
-                        <Alert border color="red">
-                            <InfoCircleSolid slot="icon" class="w-5 h-5" />
-                            {errorMessage}
-                        </Alert>
-                    {/if}
-                    <Label class="space-y-2">
-                        <span>Your email</span>
-                        <Input
-                            type="email"
-                            name="email"
-                            bind:value={email}
-                            placeholder="name@example.com"
-                            required
-                        />
-                    </Label>
-                    <Label class="space-y-2">
-                        <span>Your password</span>
-                        <Input type="password" name="password" bind:value={password} required />
-                    </Label>
-                    <div class="flex items-start">
-                        <Checkbox bind:checked={rememberMe}>Remember me</Checkbox>
-                        <a
-                            href="/"
-                            class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
-                        >
-                            Forgot password?
+<div class="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div class="flex items-center justify-center py-12">
+        <div class="mx-auto grid w-[350px] gap-6">
+            <div class="grid gap-2 text-center">
+                <h1 class="text-3xl font-bold">Login</h1>
+            </div>
+            <div class="grid gap-4">
+                <div class="grid gap-2">
+                    <Label for="email">Email</Label>
+                    <Input
+                        bind:value={email}
+                        id="email"
+                        type="email"
+                        placeholder="example@mail.com"
+                        required
+                    />
+                </div>
+                <div class="grid gap-2">
+                    <div class="flex items-center">
+                        <Label for="password">Password</Label>
+                        <a href="/" class="ml-auto inline-block text-sm underline">
+                            Forgot your password?
                         </a>
                     </div>
-                    <Button class="w-full bg-orange-500" on:click={handleLogin}>Sign in</Button>
-                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                        Don't have an account yet?
-                        <a
-                            href="/register"
-                            class="font-medium text-orange-600 hover:underline dark:text-primary-500"
-                        >
-                            Sign up
-                        </a>
-                    </p>
+                    <Input bind:value={password} id="password" type="password" required />
                 </div>
+                <Button on:click={() => handleLogin()} type="submit" class="w-full">Login</Button>
             </div>
-        </Register>
-    </Section>
+            <div class="mt-4 text-center text-sm">
+                <span>Don't have an account?</span>
+                <a href="/register" class="underline"> Sign up </a>
+            </div>
+        </div>
+    </div>
+    <div class="bg-muted hidden lg:block">
+        <img
+            src={placeholder}
+            alt="placeholder"
+            width="1920"
+            height="1080"
+            class="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+        />
+    </div>
 </div>

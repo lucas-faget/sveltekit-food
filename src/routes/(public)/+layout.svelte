@@ -5,7 +5,7 @@
 
 <div class="flex flex-col">
     <Header />
-    <div class="bg-neutral-100 min-h-screen">
+    <div class="min-h-screen">
         <slot />
     </div>
 </div>
