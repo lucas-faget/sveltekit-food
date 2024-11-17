@@ -8,8 +8,8 @@
 </script>
 
 <div class="flex flex-col">
-    <Header />
-    <div class="bg-neutral-100 min-h-screen">
+    <Header authenticated />
+    <div class="min-h-screen">
         <slot />
     </div>
 </div>

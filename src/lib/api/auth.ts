@@ -1,3 +1,5 @@
+import { goto } from "$app/navigation";
+
 /**
  * Get CSRF token
  */
@@ -13,40 +15,8 @@ export async function getCsrfToken() {
 }
 
 /**
- * Login
- * @param email
- * @param password
- */
-export async function login(email: string, password: string) {
-    const response = await fetch("http://localhost:8000/api/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-            email,
-            password,
-        }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-        return {
-            success: true,
-            message: data.message,
-        };
-    } else {
-        return {
-            success: false,
-            message: data.message,
-        };
-    }
-}
-
-/**
  * Create an account
+ * @param name
  * @param email
  * @param password
  */
@@ -67,15 +37,40 @@ export async function register(name: string, email: string, password: string) {
     const data = await response.json();
 
     if (response.ok) {
-        return {
-            success: true,
-            message: data.message,
-        };
+        console.log(data.user);
+        await goto("/login");
     } else {
-        return {
-            success: false,
-            message: data.message,
-        };
+        return data;
+    }
+}
+
+/**
+ * Login
+ * @param email
+ * @param password
+ */
+export async function login(email: string, password: string) {
+    await getCsrfToken();
+
+    const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            email,
+            password,
+        }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        console.log("User succesfully logged in");
+        await goto("/");
+    } else {
+        return data;
     }
 }
 
@@ -83,6 +78,8 @@ export async function register(name: string, email: string, password: string) {
  * Logout
  */
 export async function logout() {
+    await getCsrfToken();
+
     const response = await fetch("http://localhost:8000/api/logout", {
         method: "POST",
         credentials: "include",
@@ -90,7 +87,8 @@ export async function logout() {
 
     if (response.ok) {
         console.log("User succesfully logged out");
+        await goto("/login");
     } else {
-        console.error("Failed to logged out");
+        console.error("Failed to log out");
     }
 }

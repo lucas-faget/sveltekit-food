@@ -1,7 +1,11 @@
-import type { PageServerLoad } from "./$types";
+import type { LayoutServerLoad } from "./$types";
 import { redirect } from "@sveltejs/kit";
 
-export const load: PageServerLoad = async ({ fetch }) => {
+/**
+ * Check if the user is already authenticated
+ * If authenticated, redirect them to the homepage
+ */
+export const load: LayoutServerLoad = async ({ fetch }) => {
     const response = await fetch("http://localhost:8000/api/user", {
         method: "GET",
         credentials: "include",
