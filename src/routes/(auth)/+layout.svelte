@@ -7,9 +7,7 @@
     console.log(user);
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col min-h-screen">
     <Header authenticated />
-    <div class="min-h-screen">
-        <slot />
-    </div>
+    <slot />
 </div>
