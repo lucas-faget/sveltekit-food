@@ -35,6 +35,7 @@
     };
 
     $: {
+        clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(() => {
             if (debouncedQuery !== searchQuery) {
                 debouncedQuery = searchQuery;

@@ -1,12 +1,25 @@
-export async function searchFood(query: string, page: number = 1) {
+import axios from "axios";
+
+export async function searchFood(query: string = "", page: number = 1) {
     if (page > 0) {
-        const response = await fetch(`http://localhost:8000/api/off/food/search/${query}/${page}`);
+        try {
+            const response = await axios.get("http://localhost:8000/api/off/food/search", {
+                params: {
+                    query: query,
+                    page: page,
+                },
+            });
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch products");
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(
+                    `Failed to fetch products: ${error.response?.data || error.message}`
+                );
+            } else {
+                throw new Error("An unexpected error occurred");
+            }
         }
-
-        return await response.json();
     } else {
         throw new Error("Invalid page number");
     }
