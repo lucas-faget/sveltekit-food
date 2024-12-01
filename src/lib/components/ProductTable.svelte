@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Product } from "$lib/types";
     import { Ellipsis } from "lucide-svelte";
+    import defaultImage from "$lib/images/food.jpg";
 
     import * as Table from "$lib/components/ui/table/index.js";
     import { Badge } from "$lib/components/ui/badge/index.js";
@@ -30,7 +31,7 @@
             <Table.Row>
                 <Table.Cell class="hidden sm:table-cell">
                     <img
-                        src={product.image}
+                        src={product.image || defaultImage}
                         alt={product.name}
                         class="aspect-square rounded-md object-cover"
                         height="64"

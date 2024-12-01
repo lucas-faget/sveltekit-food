@@ -18,7 +18,7 @@
     let pageCount: number = 0;
     let currentPage: number = 1;
     let isLoading: boolean = false;
-    let searchQuery: string = "pomme";
+    let searchQuery: string = "";
     let debouncedQuery: string = searchQuery;
     let debounceTimeout: any;
 
@@ -71,72 +71,79 @@
     </form>
 
     <div class="h-full flex flex-col gap-2">
-        {#if isLoading}
-            <LoaderCircle class="mr-2 h-12 w-12 animate-spin" />
-        {:else if $products.length > 0}
-            <Tabs.Root value="all">
-                <Tabs.List>
-                    <Tabs.Trigger value="all">All</Tabs.Trigger>
-                    <Tabs.Trigger value="active">Active</Tabs.Trigger>
-                    <Tabs.Trigger value="draft">Draft</Tabs.Trigger>
-                    <Tabs.Trigger value="archived" class="hidden sm:flex">Archived</Tabs.Trigger>
-                </Tabs.List>
+        <Tabs.Root value="all">
+            <Tabs.List>
+                <Tabs.Trigger value="all">All</Tabs.Trigger>
+                <Tabs.Trigger value="active">Active</Tabs.Trigger>
+                <Tabs.Trigger value="draft">Draft</Tabs.Trigger>
+                <Tabs.Trigger value="archived" class="hidden sm:flex">Archived</Tabs.Trigger>
+            </Tabs.List>
 
-                <Tabs.Content value="all">
-                    <Card.Root>
-                        <Card.Header>
-                            <Card.Title>Products</Card.Title>
-                            <Card.Description>
-                                Here you will find the result of your food product search.
-                            </Card.Description>
-                        </Card.Header>
-                        <Card.Content>
-                            <ProductTable bind:products={$products} />
-                        </Card.Content>
-                        <Card.Footer>
-                            <div class="w-full flex justify-between items-center">
-                                <Pagination.Root
-                                    count={productCount}
-                                    {perPage}
-                                    let:pages
-                                    bind:page={currentPage}
-                                >
-                                    <Pagination.Content>
-                                        <Pagination.Item>
-                                            <Pagination.PrevButton />
-                                        </Pagination.Item>
-                                        {#each pages as page (page.key)}
-                                            {#if page.type === "ellipsis"}
-                                                <Pagination.Item>
-                                                    <Pagination.Ellipsis />
-                                                </Pagination.Item>
-                                            {:else}
-                                                <Pagination.Item>
-                                                    <Pagination.Link
-                                                        {page}
-                                                        isActive={currentPage == page.value}
-                                                    >
-                                                        {page.value}
-                                                    </Pagination.Link>
-                                                </Pagination.Item>
-                                            {/if}
-                                        {/each}
-                                        <Pagination.Item>
-                                            <Pagination.NextButton />
-                                        </Pagination.Item>
-                                    </Pagination.Content>
-                                </Pagination.Root>
-                                <div class="text-muted-foreground text-xs">
-                                    Showing <strong>1-{perPage}</strong> of
-                                    <strong>{productCount}</strong> products
-                                </div>
+            <Tabs.Content value="all">
+                <Card.Root>
+                    <Card.Header>
+                        <Card.Title>Products</Card.Title>
+                        <Card.Description>
+                            Here you will find the result of your food product search.
+                        </Card.Description>
+                    </Card.Header>
+                    <Card.Content>
+                        {#if isLoading}
+                            <div class="flex justify-center py-8">
+                                <LoaderCircle class="mr-2 h-12 w-12 animate-spin" />
                             </div>
-                        </Card.Footer>
-                    </Card.Root>
-                </Tabs.Content>
-            </Tabs.Root>
-        {:else}
-            No product
-        {/if}
+                        {:else if $products.length > 0}
+                            <ProductTable bind:products={$products} />
+                        {:else}
+                            <div class="flex flex-col items-center gap-1 text-center py-8">
+                                <h3 class="text-2xl font-bold tracking-tight">No product found</h3>
+                                <p class="text-muted-foreground text-sm">
+                                    Please try a new search.
+                                </p>
+                            </div>
+                        {/if}
+                    </Card.Content>
+                    <Card.Footer>
+                        <div class="w-full flex justify-between items-center">
+                            <Pagination.Root
+                                count={productCount}
+                                {perPage}
+                                let:pages
+                                bind:page={currentPage}
+                            >
+                                <Pagination.Content>
+                                    <Pagination.Item>
+                                        <Pagination.PrevButton />
+                                    </Pagination.Item>
+                                    {#each pages as page (page.key)}
+                                        {#if page.type === "ellipsis"}
+                                            <Pagination.Item>
+                                                <Pagination.Ellipsis />
+                                            </Pagination.Item>
+                                        {:else if page.value > 0}
+                                            <Pagination.Item>
+                                                <Pagination.Link
+                                                    {page}
+                                                    isActive={currentPage == page.value}
+                                                >
+                                                    {page.value}
+                                                </Pagination.Link>
+                                            </Pagination.Item>
+                                        {/if}
+                                    {/each}
+                                    <Pagination.Item>
+                                        <Pagination.NextButton />
+                                    </Pagination.Item>
+                                </Pagination.Content>
+                            </Pagination.Root>
+                            <div class="text-muted-foreground text-xs">
+                                Showing <strong>1-{perPage}</strong> of
+                                <strong>{productCount}</strong> products
+                            </div>
+                        </div>
+                    </Card.Footer>
+                </Card.Root>
+            </Tabs.Content>
+        </Tabs.Root>
     </div>
 </div>
