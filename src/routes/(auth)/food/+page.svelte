@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import { writable } from "svelte/store";
     import type { Product } from "$lib/types";
     import { searchFood } from "$lib/api/food";
@@ -9,27 +8,48 @@
     import { Button } from "$lib/components/ui/button/index.js";
     import * as Tabs from "$lib/components/ui/tabs/index.js";
     import * as Card from "$lib/components/ui/card/index.js";
+    import * as Pagination from "$lib/components/ui/pagination";
+
     import ProductTable from "$lib/components/ProductTable.svelte";
 
     const products = writable<Product[]>([]);
+    let productCount: number = 0;
+    let perPage: number = 0;
+    let pageCount: number = 0;
+    let currentPage: number = 1;
     let isLoading: boolean = false;
-    let searchQuery: string = "apple";
+    let searchQuery: string = "pomme";
+    let debouncedQuery: string = searchQuery;
+    let debounceTimeout: any;
 
-    const search = async () => {
+    const search = async (query: string = debouncedQuery, page: number = 1) => {
+        clearTimeout(debounceTimeout);
+        console.log("searching for products...");
         isLoading = true;
-        const data = await searchFood(searchQuery);
+        const data = await searchFood(query, page);
         products.set(data.products);
+        productCount = data.productCount;
+        perPage = data.perPage;
+        pageCount = data.pageCount;
         isLoading = false;
     };
 
-    onMount(async () => {
-        const data = await searchFood(searchQuery);
-        products.set(data.products);
-    });
+    $: {
+        debounceTimeout = setTimeout(() => {
+            if (debouncedQuery !== searchQuery) {
+                debouncedQuery = searchQuery;
+                currentPage = 1;
+            }
+        }, 1000);
+    }
+
+    $: {
+        search(debouncedQuery, currentPage);
+    }
 </script>
 
 <div class="flex-1 p-4 flex flex-col gap-4">
-    <form class="flex gap-2 items-center">
+    <form class="flex gap-2 items-center" on:submit|preventDefault={() => search()}>
         <div class="flex-1 relative flex items-center">
             <Search class="text-muted-foreground absolute left-2.5 top-2.5 h-5 w-5" />
             <Input
@@ -39,7 +59,7 @@
                 class="pl-10"
             />
         </div>
-        <Button type="submit" on:click={search}>
+        <Button type="submit">
             {#if isLoading}
                 <LoaderCircle class="mr-2 h-5 w-5 animate-spin" />
             {:else}
@@ -70,11 +90,45 @@
                             </Card.Description>
                         </Card.Header>
                         <Card.Content>
-                            <ProductTable products={$products} />
+                            <ProductTable bind:products={$products} />
                         </Card.Content>
                         <Card.Footer>
-                            <div class="text-muted-foreground text-xs">
-                                Showing <strong>1-10</strong> of <strong>32</strong> products
+                            <div class="w-full flex justify-between items-center">
+                                <Pagination.Root
+                                    count={productCount}
+                                    {perPage}
+                                    let:pages
+                                    bind:page={currentPage}
+                                >
+                                    <Pagination.Content>
+                                        <Pagination.Item>
+                                            <Pagination.PrevButton />
+                                        </Pagination.Item>
+                                        {#each pages as page (page.key)}
+                                            {#if page.type === "ellipsis"}
+                                                <Pagination.Item>
+                                                    <Pagination.Ellipsis />
+                                                </Pagination.Item>
+                                            {:else}
+                                                <Pagination.Item>
+                                                    <Pagination.Link
+                                                        {page}
+                                                        isActive={currentPage == page.value}
+                                                    >
+                                                        {page.value}
+                                                    </Pagination.Link>
+                                                </Pagination.Item>
+                                            {/if}
+                                        {/each}
+                                        <Pagination.Item>
+                                            <Pagination.NextButton />
+                                        </Pagination.Item>
+                                    </Pagination.Content>
+                                </Pagination.Root>
+                                <div class="text-muted-foreground text-xs">
+                                    Showing <strong>1-{perPage}</strong> of
+                                    <strong>{productCount}</strong> products
+                                </div>
                             </div>
                         </Card.Footer>
                     </Card.Root>
