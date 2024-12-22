@@ -1,14 +1,16 @@
 <script lang="ts">
     import { writable } from "svelte/store";
+    import { LoaderCircle, Search } from "lucide-svelte";
     import type { Product } from "$lib/types";
     import { searchFood } from "$lib/api/food";
-    import { LoaderCircle, Search } from "lucide-svelte";
+    import { createProduct } from "$lib/api/products";
 
-    import { Input } from "$lib/components/ui/input/index.js";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import * as Tabs from "$lib/components/ui/tabs/index.js";
-    import * as Card from "$lib/components/ui/card/index.js";
+    import { Input } from "$lib/components/ui/input";
+    import { Button } from "$lib/components/ui/button";
+    import * as Tabs from "$lib/components/ui/tabs";
+    import * as Card from "$lib/components/ui/card";
     import * as Pagination from "$lib/components/ui/pagination";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 
     import ProductTable from "$lib/components/ProductTable.svelte";
 
@@ -32,6 +34,10 @@
         perPage = data.perPage;
         pageCount = data.pageCount;
         isLoading = false;
+    };
+
+    const addToBasket = async (product: Product) => {
+        await createProduct(product);
     };
 
     $: {
@@ -93,7 +99,17 @@
                                 <LoaderCircle class="mr-2 h-12 w-12 animate-spin" />
                             </div>
                         {:else if $products.length > 0}
-                            <ProductTable bind:products={$products} />
+                            <ProductTable products={$products}>
+                                <div slot="actions" let:product>
+                                    <DropdownMenu.Label>Actions</DropdownMenu.Label>
+                                    <a href={`/food/${product.api_id}`}>
+                                        <DropdownMenu.Item>Go to food details</DropdownMenu.Item>
+                                    </a>
+                                    <DropdownMenu.Item on:click={() => addToBasket(product)}>
+                                        Add to basket
+                                    </DropdownMenu.Item>
+                                </div>
+                            </ProductTable>
                         {:else}
                             <div class="flex flex-col items-center gap-1 text-center py-8">
                                 <h3 class="text-2xl font-bold tracking-tight">No product found</h3>

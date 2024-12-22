@@ -1,9 +1,9 @@
 <script lang="ts">
     import { login, register } from "$lib/api/auth";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
-    import { Label } from "$lib/components/ui/label/index.js";
-    import * as Alert from "$lib/components/ui/alert/index.js";
+    import { Button } from "$lib/components/ui/button";
+    import { Input } from "$lib/components/ui/input";
+    import { Label } from "$lib/components/ui/label";
+    import * as Alert from "$lib/components/ui/alert";
     import { LoaderCircle, CircleAlert } from "lucide-svelte";
 
     export let registration = false;
@@ -38,7 +38,7 @@
         <div class="grid gap-4">
             {#if errorMessage}
                 <Alert.Root variant="destructive">
-                    <CircleAlert class="h-4 w-4" />
+                    <CircleAlert class="h-5 w-5" />
                     <Alert.Title>{errorMessage}</Alert.Title>
                 </Alert.Root>
             {/if}

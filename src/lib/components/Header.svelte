@@ -1,10 +1,9 @@
 <script lang="ts">
     import { Apple, User, Menu, Search } from "lucide-svelte";
 
-    import { Button } from "$lib/components/ui/button/index.js";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
-    import * as Sheet from "$lib/components/ui/sheet/index.js";
+    import { Button } from "$lib/components/ui/button";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+    import * as Sheet from "$lib/components/ui/sheet";
 
     import { logout } from "$lib/api/auth";
 

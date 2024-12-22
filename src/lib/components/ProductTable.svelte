@@ -1,12 +1,13 @@
 <script lang="ts">
-    import type { Product } from "$lib/types";
+    import { toast } from "svelte-sonner";
     import { Ellipsis } from "lucide-svelte";
     import defaultImage from "$lib/images/food.jpg";
+    import type { Product } from "$lib/types";
 
-    import * as Table from "$lib/components/ui/table/index.js";
-    import { Badge } from "$lib/components/ui/badge/index.js";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+    import * as Table from "$lib/components/ui/table";
+    import { Badge } from "$lib/components/ui/badge";
+    import { Button } from "$lib/components/ui/button";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 
     export let products: Product[];
 </script>
@@ -44,26 +45,26 @@
                     <Badge variant="outline">Product</Badge>
                 </Table.Cell>
                 <Table.Cell class="hidden md:table-cell">{product.api_id}</Table.Cell>
-                <Table.Cell>
-                    <DropdownMenu.Root>
-                        <DropdownMenu.Trigger asChild let:builder>
-                            <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                                builders={[builder]}
-                            >
-                                <Ellipsis class="h-4 w-4" />
-                                <span class="sr-only">Toggle menu</span>
-                            </Button>
-                        </DropdownMenu.Trigger>
-                        <DropdownMenu.Content align="end">
-                            <DropdownMenu.Label>Actions</DropdownMenu.Label>
-                            <DropdownMenu.Item>Edit</DropdownMenu.Item>
-                            <DropdownMenu.Item>Delete</DropdownMenu.Item>
-                        </DropdownMenu.Content>
-                    </DropdownMenu.Root>
-                </Table.Cell>
+                {#if $$slots.actions}
+                    <Table.Cell>
+                        <DropdownMenu.Root>
+                            <DropdownMenu.Trigger asChild let:builder>
+                                <Button
+                                    aria-haspopup="true"
+                                    size="icon"
+                                    variant="ghost"
+                                    builders={[builder]}
+                                >
+                                    <Ellipsis class="h-4 w-4" />
+                                    <span class="sr-only">Toggle menu</span>
+                                </Button>
+                            </DropdownMenu.Trigger>
+                            <DropdownMenu.Content align="end">
+                                <slot name="actions" {product} />
+                            </DropdownMenu.Content>
+                        </DropdownMenu.Root>
+                    </Table.Cell>
+                {/if}
             </Table.Row>
         {/each}
     </Table.Body>

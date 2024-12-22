@@ -78,8 +78,6 @@ export async function login(email: string, password: string) {
  * Logout
  */
 export async function logout() {
-    await getCsrfToken();
-
     const response = await fetch("http://localhost:8000/api/logout", {
         method: "POST",
         credentials: "include",
