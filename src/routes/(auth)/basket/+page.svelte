@@ -2,7 +2,7 @@
     import { writable } from "svelte/store";
     import type { Product } from "$lib/types";
     import { deleteProduct, searchProducts } from "$lib/api/products";
-    import { LoaderCircle, Search } from "lucide-svelte";
+    import { LoaderCircle, Search, Trash2, UtensilsCrossed } from "lucide-svelte";
 
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
@@ -109,10 +109,16 @@
                         {:else if $products.length > 0}
                             <ProductTable products={$products}>
                                 <div slot="actions" let:product>
+                                    <DropdownMenu.Label>Actions</DropdownMenu.Label>
+                                    <DropdownMenu.Item on:click={() => null}>
+                                        <UtensilsCrossed class="mr-2 h-4 w-4" />
+                                        <span>Add an intake</span>
+                                    </DropdownMenu.Item>
                                     <DropdownMenu.Item
                                         on:click={() => handleProductDeletion(product)}
                                     >
-                                        Delete
+                                        <Trash2 class="mr-2 h-4 w-4" />
+                                        <span>Delete</span>
                                     </DropdownMenu.Item>
                                 </div>
                             </ProductTable>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { writable } from "svelte/store";
-    import { LoaderCircle, Search } from "lucide-svelte";
+    import { Eye, LoaderCircle, Search, ShoppingBasket } from "lucide-svelte";
     import type { Product } from "$lib/types";
     import { searchFood } from "$lib/api/food";
     import { createProduct } from "$lib/api/products";
@@ -103,10 +103,14 @@
                                 <div slot="actions" let:product>
                                     <DropdownMenu.Label>Actions</DropdownMenu.Label>
                                     <a href={`/food/${product.api_id}`}>
-                                        <DropdownMenu.Item>Go to food details</DropdownMenu.Item>
+                                        <DropdownMenu.Item>
+                                            <Eye class="mr-2 h-4 w-4" />
+                                            <span>Go to food details</span>
+                                        </DropdownMenu.Item>
                                     </a>
                                     <DropdownMenu.Item on:click={() => addToBasket(product)}>
-                                        Add to basket
+                                        <ShoppingBasket class="mr-2 h-4 w-4" />
+                                        <span>Add to basket</span>
                                     </DropdownMenu.Item>
                                 </div>
                             </ProductTable>
