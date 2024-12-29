@@ -29,11 +29,13 @@
         console.log("searching for products...");
         isLoading = true;
         const data = await searchFood(query, page);
-        products.set(data.products);
-        productCount = data.productCount;
-        perPage = data.perPage;
-        pageCount = data.pageCount;
-        isLoading = false;
+        if (data?.products) {
+            products.set(data.products);
+            productCount = data.productCount;
+            perPage = data.perPage;
+            pageCount = data.pageCount;
+            isLoading = false;
+        }
     };
 
     const addToBasket = async (product: Product) => {

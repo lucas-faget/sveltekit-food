@@ -12,6 +12,8 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 
     import ProductTable from "$lib/components/ProductTable.svelte";
+    import IntakeDialog from "$lib/dialogs/IntakeDialog.svelte";
+    import DeletionDialog from "$lib/dialogs/DeletionDialog.svelte";
 
     const products = writable<Product[]>([]);
     let productCount: number = 0;
@@ -23,24 +25,32 @@
     let debouncedQuery: string = searchQuery;
     let debounceTimeout: any;
 
+    let productId: number | undefined = undefined;
+    let isIntakeDialogOpen: boolean = false;
+    let isProductDeletionDialogOpen: boolean = false;
+
     const search = async (query: string = debouncedQuery, page: number = 1) => {
         clearTimeout(debounceTimeout);
         console.log("searching for products...");
         isLoading = true;
         const data = await searchProducts(query, page);
-        products.set(data.products);
-        productCount = data.productCount;
-        perPage = data.perPage;
-        pageCount = data.pageCount;
-        isLoading = false;
+        if (data?.products) {
+            products.set(data.products);
+            productCount = data.productCount;
+            perPage = data.perPage;
+            pageCount = data.pageCount;
+            isLoading = false;
+        }
     };
 
-    const handleProductDeletion = async (product: Product) => {
-        if (product.id) {
-            await deleteProduct(product.id);
-            products.update((storedProducts) =>
-                storedProducts.filter((storedProduct) => storedProduct.id !== product.id)
-            );
+    const handleProductDeletion = async () => {
+        if (productId) {
+            const deleted = await deleteProduct(productId);
+            if (deleted) {
+                products.update((storedProducts) =>
+                    storedProducts.filter((storedProduct) => storedProduct.id !== productId)
+                );
+            }
         }
     };
 
@@ -110,12 +120,20 @@
                             <ProductTable products={$products}>
                                 <div slot="actions" let:product>
                                     <DropdownMenu.Label>Actions</DropdownMenu.Label>
-                                    <DropdownMenu.Item on:click={() => null}>
+                                    <DropdownMenu.Item
+                                        on:click={() => {
+                                            productId = product.id;
+                                            isIntakeDialogOpen = true;
+                                        }}
+                                    >
                                         <UtensilsCrossed class="mr-2 h-4 w-4" />
                                         <span>Add an intake</span>
                                     </DropdownMenu.Item>
                                     <DropdownMenu.Item
-                                        on:click={() => handleProductDeletion(product)}
+                                        on:click={() => {
+                                            productId = product.id;
+                                            isProductDeletionDialogOpen = true;
+                                        }}
                                     >
                                         <Trash2 class="mr-2 h-4 w-4" />
                                         <span>Delete</span>
@@ -175,3 +193,10 @@
         </Tabs.Root>
     </div>
 </div>
+
+<IntakeDialog bind:open={isIntakeDialogOpen} bind:productId />
+<DeletionDialog
+    bind:open={isProductDeletionDialogOpen}
+    type="intake"
+    onConfirm={handleProductDeletion}
+/>

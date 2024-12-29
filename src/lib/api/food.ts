@@ -13,14 +13,14 @@ export async function searchFood(query: string = "", page: number = 1) {
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                throw new Error(
-                    `Failed to fetch products: ${error.response?.data || error.message}`
-                );
+                // throw new Error(
+                //     `Failed to fetch products: ${error.response?.data || error.message}`
+                // );
             } else {
-                throw new Error("An unexpected error occurred");
+                // throw new Error("An unexpected error occurred");
             }
         }
     } else {
-        throw new Error("Invalid page number");
+        // throw new Error("Invalid page number");
     }
 }

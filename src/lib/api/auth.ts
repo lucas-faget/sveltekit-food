@@ -10,7 +10,7 @@ export async function getCsrfToken() {
     });
 
     if (!response.ok) {
-        throw new Error("Unable to fetch CSRF token.");
+        // throw new Error("Unable to fetch CSRF token.");
     }
 }
 

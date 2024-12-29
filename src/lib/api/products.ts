@@ -17,15 +17,15 @@ export async function searchProducts(query: string = "", page: number = 1) {
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                throw new Error(
-                    `Failed to fetch products: ${error.response?.data || error.message}`
-                );
+                // throw new Error(
+                //     `Failed to fetch products: ${error.response?.data || error.message}`
+                // );
             } else {
-                throw new Error("An unexpected error occurred");
+                // throw new Error("An unexpected error occurred");
             }
         }
     } else {
-        throw new Error("Invalid page number");
+        // throw new Error("Invalid page number");
     }
 }
 
@@ -38,10 +38,10 @@ export async function createProduct(product: Product) {
     } catch (error) {
         if (axios.isAxiosError(error)) {
             toast.error("Failed to create product");
-            throw new Error(`Failed to create product: ${error.response?.data || error.message}`);
+            // throw new Error(`Failed to create product: ${error.response?.data || error.message}`);
         } else {
             toast.error("An unexpected error occurred");
-            throw new Error("An unexpected error occurred");
+            // throw new Error("An unexpected error occurred");
         }
     }
 }
@@ -49,16 +49,22 @@ export async function createProduct(product: Product) {
 export async function deleteProduct(id: number) {
     try {
         const response = await axios.delete(`http://localhost:8000/api/products/${id}`);
-
-        toast.success("Product deleted");
-        return response.data;
+        if (response.status === 204) {
+            toast.success("Product deleted");
+            return true;
+        } else {
+            toast.error("Failed to delete product");
+            return false;
+        }
     } catch (error) {
         if (axios.isAxiosError(error)) {
             toast.error("Failed to delete product");
-            throw new Error(`Failed to delete product: ${error.response?.data || error.message}`);
+            // throw new Error(`Failed to delete product: ${error.response?.data || error.message}`);
         } else {
             toast.error("An unexpected error occurred");
-            throw new Error("An unexpected error occurred");
+            // throw new Error("An unexpected error occurred");
         }
+
+        return false;
     }
 }
